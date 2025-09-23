@@ -21,14 +21,16 @@ def load_parquet_files():
 
         con.execute("""
             CREATE OR REPLACE TABLE yellow_trip_data (
+                VendorID INTEGER,
                 tpep_pickup_datetime TIMESTAMP,
                 tpep_dropoff_datetime TIMESTAMP,
-                trip_distance DOUBLE
+                trip_distance DOUBLE,
+                passenger_count INTEGER,
             );
         """)
         columns_to_load = [
-            "tpep_pickup_datetime", "tpep_dropoff_datetime",
-            "trip_distance"
+            "VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime",
+            "trip_distance", "passenger_count"
         ]
         columns_str = ", ".join(columns_to_load)
         year = 2024
@@ -56,14 +58,16 @@ def load_parquet_files():
 
         con.execute("""
             CREATE OR REPLACE TABLE green_trip_data (
+                VendorID INTEGER,
                 lpep_pickup_datetime TIMESTAMP,
                 lpep_dropoff_datetime TIMESTAMP,
-                trip_distance DOUBLE
+                trip_distance DOUBLE,
+                passenger_count INTEGER
             );
         """)
         columns_to_load2 = [
-            "lpep_pickup_datetime", "lpep_dropoff_datetime",
-            "trip_distance"
+            "VendorID", "lpep_pickup_datetime", "lpep_dropoff_datetime",
+            "trip_distance", "passenger_count"
         ]
         columns_str2 = ", ".join(columns_to_load2)
 
@@ -87,6 +91,15 @@ def load_parquet_files():
         row_count2 = con.execute("SELECT COUNT(*) FROM green_trip_data").fetchone()[0]
         print(f"Successfully loaded data. Table 'green_trip_data' now contains {row_count2:,} rows.")
         logger.info(f"Final row count for 'green_trip_data': {row_count2:,}")
+
+        logger.info("--- Starting process for vehicle_emissions ---")
+        con.execute("""
+            CREATE OR REPLACE TABLE vehicle_emissions AS
+            FROM read_csv_auto('data/vehicle_emissions.csv', HEADER=TRUE);
+        """)
+        logger.info("Table 'vehicle_emissions' created and loaded.")
+        print(f"Successfully loaded data into 'vehicle_emissions' table.")
+
 
     except Exception as e:
         print(f"An error occurred: {e}")
