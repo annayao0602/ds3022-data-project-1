@@ -18,6 +18,7 @@ def transform():
 
         #calculate new column trip_co2_kgs for yellow_trip_data
         print("Transforming yellow_trip_data...")
+        logger.info("Transforming yellow_trip_data...")
         con.execute("""
                     CREATE OR REPLACE TABLE yellow_trip_data AS
                     SELECT *,
@@ -27,6 +28,7 @@ def transform():
                     FROM yellow_trip_data;
                     """)
         logger.info("Transformed yellow_trip_data with new column trip_co2_kgs")
+        print("Transformed yellow_trip_data with new column trip_co2_kgs")
 
         #calculate avg_mph for yellow_trip_data
         con.execute("""
@@ -36,6 +38,7 @@ def transform():
                     FROM yellow_trip_data;
                     """)
         logger.info("Transformed yellow_trip_data with new column avg_mph")
+        print("Transformed yellow_trip_data with new column avg_mph")
         #extract new columns hour_of_day, day_of_week, week_of_year, month_of_year for yellow_trip_data
         con.execute("""
                     CREATE OR REPLACE TABLE yellow_trip_data AS
@@ -46,6 +49,7 @@ def transform():
                     EXTRACT(MONTH FROM tpep_pickup_datetime) AS month_of_year
                     FROM yellow_trip_data;
                     """)
+        print("Transformed yellow_trip_data with new datetime columns")
         logger.info("Transformed yellow_trip_data with new datetime columns")
         
 
@@ -61,7 +65,8 @@ def transform():
                     trip_distance / ((epoch(lpep_dropoff_datetime - lpep_pickup_datetime)) / 3600.0) AS avg_mph
                     FROM green_trip_data;
                     """)
-        logger.info("Transformed green_trip_data with new column avg_mph")
+        logger.info("Transformed green_trip_data with new columns trip_co2_kgs and avg_mph")
+        print("Transformed green_trip_data with new columns trip_co2_kgs and avg_mph")
         #extract new columns hour_of_day, day_of_week, week_of_year, month_of_year for green_trip_data
         con.execute("""
                     CREATE OR REPLACE TABLE green_trip_data AS

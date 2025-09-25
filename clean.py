@@ -85,6 +85,7 @@ def clean_parquet():
         #after cleaning
         print("After cleaning:")
         logger.info("After cleaning:")
+        #check if there are any rows that still need to be cleaned for yellow trip data
         cleaned_rows = con.execute("""SELECT COUNT(*) 
                                        FROM yellow_trip_data 
                                        WHERE 
@@ -97,6 +98,7 @@ def clean_parquet():
         print(f"Number of rows to be cleaned in yellow_trip_data after cleaning: {cleaned_rows}")
         logger.info(f"Number of rows to be cleaned in yellow_trip_data after cleaning: {cleaned_rows}") 
 
+        #check if there are any rows that still need to be cleaned for green trip data
         cleaned_rows2 = con.execute("""SELECT COUNT(*)    
                                         FROM green_trip_data 
                                         WHERE 
