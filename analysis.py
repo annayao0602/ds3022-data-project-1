@@ -28,8 +28,8 @@ def transform():
                     ORDER BY trip_co2_kgs DESC
                     LIMIT 1;
                     """).fetchone()
-        print(f"Largest carbon producing trip of the year (yellow taxi): {largest_trip}")
-        logger.info(f"Largest carbon producing trip of the year (yellow taxi): {largest_trip}")
+        print(f"The largest carbon producing trip of the year for yellow taxis produced {largest_trip[4]} kgs of CO2")
+        logger.info(f"The largest carbon producing trip of the year for yellow taxis produced {largest_trip[4]} kgs of CO2")
 
         #single largest carbon producing trip of the year for green taxi
         largest_trip_green = con.execute("""
@@ -38,8 +38,8 @@ def transform():
                     ORDER BY trip_co2_kgs DESC
                     LIMIT 1;
                     """).fetchone()
-        print(f"Largest carbon producing trip of the year (green taxi): {largest_trip_green}")
-        logger.info(f"Largest carbon producing trip of the year (green taxi): {largest_trip_green}")
+        print(f"The largest carbon producing trip of the year for green taxis produced {largest_trip_green[4]} kgs of CO2")
+        logger.info(f"The largest carbon producing trip of the year for green taxis produced {largest_trip_green[4]} kgs of CO2")
 
         #----average trip CO2 by time period----
         time = ['hour_of_day', 'day_of_week', 'week_of_year', 'month_of_year']
@@ -55,8 +55,8 @@ def transform():
                         ORDER BY avg_co2 DESC
                         LIMIT 1;
                         """).fetchone()
-            print(f"Highest average trip CO2 by {label} (yellow taxi): {highest_avg_co2}")
-            logger.info(f"Highest average trip CO2 by {label} (yellow taxi): {highest_avg_co2}")
+            print(f"Highest average trip CO2 by {label} (yellow taxi): {label}: {highest_avg_co2[0]}, Avg CO2: {highest_avg_co2[1]}")
+            logger.info(f"Highest average trip CO2 by {label} (yellow taxi): {label}: {highest_avg_co2[0]}, Avg CO2: {highest_avg_co2[1]}")
 
             highest_avg_co2_green = con.execute(f"""
                         SELECT {t}, AVG(trip_co2_kgs) AS avg_co2
@@ -65,8 +65,8 @@ def transform():
                         ORDER BY avg_co2 DESC
                         LIMIT 1;
                         """).fetchone()
-            print(f"Highest average trip CO2 by {label} (green taxi): {highest_avg_co2_green}")
-            logger.info(f"Highest average trip CO2 by {label} (green taxi): {highest_avg_co2_green}")
+            print(f"Highest average trip CO2 by {label} (green taxi): {label}: {highest_avg_co2_green[0]}, Avg CO2: {highest_avg_co2_green[1]}")
+            logger.info(f"Highest average trip CO2 by {label} (green taxi): {label}: {highest_avg_co2_green[0]}, Avg CO2: {highest_avg_co2_green[1]}")
 
             #lowest average trip CO2 by time period
             lowest_avg_co2 = con.execute(f"""
@@ -76,8 +76,8 @@ def transform():
                         ORDER BY avg_co2 ASC
                         LIMIT 1;
                         """).fetchone()
-            print(f"Lowest average trip CO2 by {label} (yellow taxi): {lowest_avg_co2}")
-            logger.info(f"Lowest average trip CO2 by {label} (yellow taxi): {lowest_avg_co2}")
+            print(f"Lowest average trip CO2 by {label} (yellow taxi): {label}: {lowest_avg_co2[0]}, Avg CO2: {lowest_avg_co2[1]}")
+            logger.info(f"Lowest average trip CO2 by {label} (yellow taxi): {label}: {lowest_avg_co2[0]}, Avg CO2: {lowest_avg_co2[1]}")
 
             lowest_avg_co2_green = con.execute(f"""
                         SELECT {t}, AVG(trip_co2_kgs) AS avg_co2
@@ -86,8 +86,8 @@ def transform():
                         ORDER BY avg_co2 ASC
                         LIMIT 1;
                         """).fetchone()
-            print(f"Lowest average trip CO2 by {label} (green taxi): {lowest_avg_co2_green}")
-            logger.info(f"Lowest average trip CO2 by {label} (green taxi): {lowest_avg_co2_green}")
+            print(f"Lowest average trip CO2 by {label} (green taxi): {label}: {lowest_avg_co2_green[0]}, Avg CO2: {lowest_avg_co2_green[1]}")
+            logger.info(f"Lowest average trip CO2 by {label} (green taxi): {label}: {lowest_avg_co2_green[0]}, Avg CO2: {lowest_avg_co2_green[1]}")
         
 
         #time-series plot or histogram with MONTH along the X-axis and CO2 totals along the Y-axis
