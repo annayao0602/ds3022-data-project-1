@@ -1,6 +1,6 @@
 
   
-  create view "emissions"."main"."stg_green_trip_data__dbt_tmp" as (
+  create view "emissions"."main"."green_trip_data__dbt_tmp" as (
     
 
 

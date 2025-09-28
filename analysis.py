@@ -20,26 +20,27 @@ def transform():
         logger.info("Connected to DuckDB instance")
 
         #single largest carbon producing trip of the year for yellow taxi
+        #----NOTE: Using stg_tables created in dbt (saving source data for best practices)----
         print("Analyzing data...")
         logger.info("Analyzing data...")
         largest_trip = con.execute("""
                     SELECT *
-                    FROM yellow_trip_data
+                    FROM stg_yellow_trip_data
                     ORDER BY trip_co2_kgs DESC
                     LIMIT 1;
                     """).fetchone()
-        print(f"The largest carbon producing trip of the year for yellow taxis produced {largest_trip[4]} kgs of CO2")
-        logger.info(f"The largest carbon producing trip of the year for yellow taxis produced {largest_trip[4]} kgs of CO2")
+        print(f"The largest carbon producing trip of the year for yellow taxis on {largest_trip[4]} and produced {largest_trip[6]} kgs of CO2")
+        logger.info(f"The largest carbon producing trip of the year for yellow taxis on {largest_trip[4]} and produced {largest_trip[6]} kgs of CO2")
 
         #single largest carbon producing trip of the year for green taxi
         largest_trip_green = con.execute("""
                      SELECT *
-                    FROM green_trip_data
+                    FROM stg_green_trip_data
                     ORDER BY trip_co2_kgs DESC
                     LIMIT 1;
                     """).fetchone()
-        print(f"The largest carbon producing trip of the year for green taxis produced {largest_trip_green[4]} kgs of CO2")
-        logger.info(f"The largest carbon producing trip of the year for green taxis produced {largest_trip_green[4]} kgs of CO2")
+        print(f"The largest carbon producing trip of the year for green taxis was on {largest_trip_green[4]} and produced {largest_trip_green[6]} kgs of CO2")
+        logger.info(f"The largest carbon producing trip of the year for green taxis on {largest_trip_green[4]} and produced {largest_trip_green[6]} kgs of CO2")
 
         #----average trip CO2 by time period----
         time = ['hour_of_day', 'day_of_week', 'week_of_year', 'month_of_year']
@@ -50,7 +51,7 @@ def transform():
             #highest average trip CO2 by time period
             highest_avg_co2 = con.execute(f"""
                         SELECT {t}, AVG(trip_co2_kgs) AS avg_co2
-                        FROM yellow_trip_data
+                        FROM stg_yellow_trip_data
                         GROUP BY {t}
                         ORDER BY avg_co2 DESC
                         LIMIT 1;
@@ -60,7 +61,7 @@ def transform():
 
             highest_avg_co2_green = con.execute(f"""
                         SELECT {t}, AVG(trip_co2_kgs) AS avg_co2
-                        FROM green_trip_data
+                        FROM stg_green_trip_data
                         GROUP BY {t}
                         ORDER BY avg_co2 DESC
                         LIMIT 1;
@@ -71,7 +72,7 @@ def transform():
             #lowest average trip CO2 by time period
             lowest_avg_co2 = con.execute(f"""
                         SELECT {t}, AVG(trip_co2_kgs) AS avg_co2
-                        FROM yellow_trip_data
+                        FROM stg_yellow_trip_data
                         GROUP BY {t}
                         ORDER BY avg_co2 ASC
                         LIMIT 1;
@@ -81,7 +82,7 @@ def transform():
 
             lowest_avg_co2_green = con.execute(f"""
                         SELECT {t}, AVG(trip_co2_kgs) AS avg_co2
-                        FROM green_trip_data
+                        FROM stg_green_trip_data
                         GROUP BY {t}
                         ORDER BY avg_co2 ASC
                         LIMIT 1;
@@ -95,7 +96,7 @@ def transform():
         print("Creating time-series plot for monthly CO2 emissions...")
         monthly_co2 = con.execute("""
                     SELECT month_of_year, SUM(trip_co2_kgs) AS total_co2
-                    FROM yellow_trip_data
+                    FROM stg_yellow_trip_data
                     GROUP BY month_of_year
                     ORDER BY month_of_year;
                     """).fetchall()
@@ -120,7 +121,7 @@ def transform():
         #sql query to get monthly CO2 totals for green taxi
         monthly_co2_green = con.execute("""
                     SELECT month_of_year, SUM(trip_co2_kgs) AS total_co2
-                    FROM green_trip_data 
+                    FROM stg_green_trip_data 
                     GROUP BY month_of_year
                     ORDER BY month_of_year;
                     """).fetchall()

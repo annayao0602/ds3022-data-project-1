@@ -21,7 +21,7 @@ def clean_parquet():
         logger.info("Before cleaning:")
 
         #Yellow trip data to be cleaned
-        duplicate_yellow = con.execute("SELECT COUNT(*) - COUNT(DISTINCT *) FROM yellow_trip_data").fetchone()[0]
+        duplicate_yellow = con.execute("SELECT COUNT(*) - COUNT(DISTINCT COLUMNS(*)) FROM yellow_trip_data").fetchone()[0]
         print(f"Number of duplicate rows in yellow_trip_data before cleaning: {duplicate_yellow}")
         logger.info(f"Number of duplicate rows in yellow_trip_data before cleaning: {duplicate_yellow}")
 
@@ -38,7 +38,7 @@ def clean_parquet():
         logger.info(f"Number of rows with invalid trip time in yellow_trip_data before cleaning: {invalid_time_yellow}")
 
         #Green trip data to be cleaned
-        duplicate_green = con.execute("SELECT COUNT(*) - COUNT(DISTINCT *) FROM green_trip_data").fetchone()[0]
+        duplicate_green = con.execute("SELECT COUNT(*) - COUNT(DISTINCT COLUMNS(*)) FROM green_trip_data").fetchone()[0]
         print(f"Number of duplicate rows in green_trip_data before cleaning: {duplicate_green}")
         logger.info(f"Number of duplicate rows in green_trip_data before cleaning: {duplicate_green}")
 

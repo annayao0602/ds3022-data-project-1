@@ -1,5 +1,16 @@
 # DS3022 - Data Project 1 (Fall 2025)
 
+# ADDED: TO RUN
+In the main project directory, run:
+python load.py
+python clean.py
+
+Cd into dbt, run:
+dbt build
+
+Return back to main project directory, run:
+python analysis.py
+
 ## Assignment
 
 <img src="https://s3.amazonaws.com/uvasds-systems/images/nyc-taxi-graphic.png" style="align:right;float:right;max-width:50%;">
