@@ -1,0 +1,27 @@
+
+version: 2
+
+models:
+  - name: stg_green_tripdata 
+    columns:
+      - name: trip_co2_kgs
+        tests:
+          - not_null
+      - name: avg_mph
+        tests:
+          - not_null
+      - name: hour_of_day
+        tests:
+          - not_null
+
+  - name: stg_yellow_tripdata
+    columns:
+      - name: trip_co2_kgs
+        tests:
+          - not_null
+      - name: avg_mph
+        tests:
+          - not_null
+      - name: hour_of_day
+        tests:
+          - not_null

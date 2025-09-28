@@ -1,7 +1,7 @@
 import duckdb
 import logging
 
-#USING DBT FOR TRANSFORMATIONS
+#USING DBT FOR TRANSFORMATIONS, log in dbt.log
 
 logging.basicConfig(
     level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',

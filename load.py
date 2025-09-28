@@ -20,7 +20,7 @@ def load_parquet_files():
         con = duckdb.connect(database='emissions.duckdb', read_only=False)
         logger.info("Connected to DuckDB instance")
 
-        # Load yellow taxi data for all 10 years (2015-2024)
+        # Load yellow taxi data for 2024
         logger.info("--- Starting process for yellow_trip_data ---")
         con.execute("""
             CREATE OR REPLACE TABLE yellow_trip_data (
@@ -36,37 +36,33 @@ def load_parquet_files():
             "trip_distance", "passenger_count"
         ]
         columns_str = ", ".join(columns_to_load)
+        year = 2024
 
         #for loop to iterate through each month of 10 years data
-        for year in range(2015,2025):
-            for month in range(1, 13):
-                month_str = f"{month:02d}"
+        for month in range(1, 13):
+            month_str = f"{month:02d}"
+            
+            # Dynamically create the file URL for the current month
+            file_url = f"https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year}-{month_str}.parquet"
+            #skips files that are not found
+            try:
+                logger.info(f"Loading data from {file_url}...")
                 
-                # Dynamically create the file URL for the current month
-                file_url = f"https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year}-{month_str}.parquet"
-                #skips files that are not found
-                try:
-                    logger.info(f"Loading data from {file_url}...")
-                    
-                    con.execute(f"""
-                        INSERT INTO yellow_trip_data ({columns_str})
-                        SELECT {columns_str} 
-                        FROM read_parquet('{file_url}');
-                        """)
-                except Exception as e:
-                    logger.warning(f"Could not load file {file_url}. Error: {e}. Skipping.")
-                    continue
-                time.sleep(0.5)
-
-
-        logger.info("Finished loading all 10 years of data.")
+                con.execute(f"""
+                    INSERT INTO yellow_trip_data ({columns_str})
+                    SELECT {columns_str} 
+                    FROM read_parquet('{file_url}');
+                    """)
+            except Exception as e:
+                logger.warning(f"Could not load file {file_url}. Error: {e}. Skipping.")
+                continue
 
         # Get the row count after loading
         row_count = con.execute("SELECT COUNT(*) FROM yellow_trip_data").fetchone()[0]
         print(f"Successfully loaded data. Table 'yellow_trip_data' now contains {row_count:,} rows.")
         logger.info(f"Final row count for 'yellow_trip_data': {row_count:,}")
 
-        # Load green taxi data for all 10 years
+        # Load green taxi data for 2024
         logger.info("--- Starting process for green_trip_data ---")
         con.execute("""
             CREATE OR REPLACE TABLE green_trip_data (
@@ -84,28 +80,24 @@ def load_parquet_files():
         columns_str2 = ", ".join(columns_to_load2)
 
         #for loop to iterate through each month
-        for year in range(2015,2025):
-            for month in range(1, 13):
-                month_str = f"{month:02d}"
-                
-                # Dynamically create the file URL for the current month
-                file_url2 = f"https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_{year}-{month_str}.parquet"
-                
-                logger.info(f"Loading data from {file_url2}...")
-                #skips files that are not found
-                try:
-                    con.execute(f"""
-                        INSERT INTO green_trip_data ({columns_str2})
-                        SELECT {columns_str2} 
-                        FROM read_parquet('{file_url2}');
-                        """)
-                except Exception as e:
-                    logger.warning(f"Could not load file {file_url2}. Error: {e}. Skipping.")
-                    continue
+        for month in range(1, 13):
+            month_str = f"{month:02d}"
+            
+            # Dynamically create the file URL for the current month
+            file_url2 = f"https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_{year}-{month_str}.parquet"
+            
+            logger.info(f"Loading data from {file_url2}...")
+            #skips files that are not found
+            try:
+                con.execute(f"""
+                    INSERT INTO green_trip_data ({columns_str2})
+                    SELECT {columns_str2} 
+                    FROM read_parquet('{file_url2}');
+                    """)
+            except Exception as e:
+                logger.warning(f"Could not load file {file_url2}. Error: {e}. Skipping.")
+                continue
 
-                time.sleep(0.5)
-
-        logger.info("Finished loading all 10 years of data.")
         
         # Get the row count after loading
         row_count2 = con.execute("SELECT COUNT(*) FROM green_trip_data").fetchone()[0]
