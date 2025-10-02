@@ -3,16 +3,38 @@ import os
 import logging
 import time
 
+
 logging.basicConfig(
     level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
     filename='load.log'
 )
 logger = logging.getLogger(__name__)
 
+# NOTE: I couldn't load all 10 years due to low storage on my hard drive, so I only put code for the 2024. I have put a comment below to show how i would do the 10 years.
+"""
+code changes for 10 years:
+for year in range(2014, 2025):
+    for month in range(1, 13):
+        month_str = f"{month:02d}"
+        file_url = f"https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year}-{month_str}.parquet"
+        try:
+            logger.info(f"Loading data from {file_url}...")
+            
+            con.execute(f(insert three quotations around this - can't because this is already a comment)
+                INSERT INTO yellow_trip_data ({columns_str})
+                SELECT {columns_str} 
+                FROM read_parquet('{file_url}');
+                )
+        except Exception as e:
+            logger.warning(f"Could not load file {file_url}. Error: {e}. Skipping.")
+            continue
+**same code sequence for green taxi data**
+"""
 
 def load_parquet_files():
 
     con = None
+    
    
 
     try:
