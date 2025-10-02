@@ -6,7 +6,7 @@ python load.py
 python clean.py
 
 Cd into dbt, run:
-dbt build
+dbt build (NOTE: my absolute path is used in profiles.yml -- to run on a different server, replace absolute path with your own)
 
 Return back to main project directory, run:
 python analysis.py
